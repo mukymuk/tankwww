@@ -82,8 +82,10 @@
 			<F N="views/layout.jade"/>
 		</Folder>
 		<F N="app.js"/>
+		<F N="chaetolight.js"/>
 		<F N="gpio.js"/>
 		<F N="rb.js"/>
 		<F N="sumplight.js"/>
+		<F N="tanklight.js"/>
 	</Files>
 </Project>

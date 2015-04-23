@@ -10,11 +10,19 @@ var users = require('./routes/users');
 
 var rb = require('./rb');
 var sumplight = require('./sumplight');
-
+var tanklight = require('./tanklight');
+var chaetolight = require('./chaetolight');
+var x200 = require('./x200/build/Release/x200');
 var app = express();
  
 
 app.set('sumplight', sumplight.open() );
+app.set('leftlight', tanklight.open('left') );
+app.set('centerlight', tanklight.open('center') );
+app.set('rightlight', tanklight.open('right') );
+app.set('fan', tanklight.daytime );
+app.set('chaetolight', chaetolight.open() );
+app.set('x200', x200);
 
 //  view engine setup
 app.set('views', path.join(__dirname, 'views'));
