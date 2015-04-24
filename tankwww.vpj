@@ -23,7 +23,7 @@
 				CaptureOutputWith="ProcessBuffer"
 				SaveOption="SaveWorkspaceFiles"
 				RunFromDir="%rw">
-				<Exec CmdLine="rsync -h -v -r -P -t --include '*.jade' --include '*.css' --include '*.js' --include='*/' --exclude='*' ./ tank:/root/tankwww/"/>
+				<Exec CmdLine="rsync -h -v -r -P -t --include '*.jade' --include '*.css' --include '*.js' --include '*.sh' --include='*/' --exclude='*' ./ tank:/root/tankwww/"/>
 			</Target>
 			<Target
 				Name="Rebuild"
@@ -83,6 +83,8 @@
 		</Folder>
 		<F N="app.js"/>
 		<F N="chaetolight.js"/>
+		<F N="control.js"/>
+		<F N="dbg.sh"/>
 		<F N="gpio.js"/>
 		<F N="rb.js"/>
 		<F N="sumplight.js"/>

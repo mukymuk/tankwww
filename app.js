@@ -1,4 +1,6 @@
- var express = require('express');
+var debug = require('debug')('app');
+var wait = require('wait.for');
+var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -13,16 +15,32 @@ var sumplight = require('./sumplight');
 var tanklight = require('./tanklight');
 var chaetolight = require('./chaetolight');
 var x200 = require('./x200/build/Release/x200');
-var app = express();
- 
+var alarm = require('./alarm');
 
-app.set('sumplight', sumplight.open() );
-app.set('leftlight', tanklight.open('left') );
-app.set('centerlight', tanklight.open('center') );
-app.set('rightlight', tanklight.open('right') );
-app.set('fan', tanklight.daytime );
-app.set('chaetolight', chaetolight.open() );
-app.set('x200', x200);
+var control = require('./control');
+
+var io = { 
+  sumplight: sumplight.open(),
+  leftlight: tanklight.open('left'),
+  rightlight: tanklight.open('right'),
+  centerlight: tanklight.open('center'),
+  fan: tanklight.daytime,
+  chaetolight: chaetolight.open(),
+  diverter: rb.open(0,4),
+  sumpcirc: [ rb.open(1,6), rb.open(1,7) ],
+  skimmer: rb.open(1,5),
+  topoff: rb.open(1,2),
+  alarm: alarm,
+  x200: x200
+};
+
+debug("starting...");
+
+
+x200.open();
+var app = express();
+
+app.set('io', io );
 
 //  view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -68,6 +86,28 @@ app.use(function(err, req, res, next) {
     message: err.message,
     error: {}
   });
+});
+
+var tickid;
+
+var gracefulShutdown = function() {
+     x200.close();
+    // alarm.set( alarm.config.close);
+     clearTimeout(tickid);
+     debug("exiting.")
+     setTimeout( function() {
+                     process.exit();
+                     }, 1000);
+    
+}
+
+process.on('SIGINT', gracefulShutdown );
+process.on('SIGTERM', gracefulShutdown );
+
+
+alarm.set( alarm.config.start, function() {
+                                   debug("running.");
+                                   tickid = setInterval( control.tick, 1000 );
 });
 
 

@@ -5,22 +5,17 @@ var router = express.Router();
 /* GET home page. */ 
 
 router.get('/', function(req, res, next) {
-  var sl = req.app.get('sumplight');
-  var leftlight = req.app.get('leftlight');
-  var centerlight = req.app.get('centerlight');
-  var rightlight = req.app.get('rightlight');
-  var chaetolight = req.app.get('chaetolight');
-  var fanstate = req.app.get('fan');
-  var x200 = req.app.get('x200');
+  var io = req.app.get('io');
 
   res.render('index', { title: 'Tank', 
-      sumplight: sl.get()==true ? "On" : "Off", 
-      leftlight: leftlight.get(), 
-      centerlight: centerlight.get(), 
-      rightlight: rightlight.get(),
-      fan: fanstate()==true ? "On" : "Off",
-      chaetolight: chaetolight.get()==true ? "On" : "Off",
-      x200: x200.hello()
+      sumplight: io.sumplight.get()==true ? "On" : "Off", 
+      leftlight: io.leftlight.get(), 
+      centerlight: io.centerlight.get(), 
+      rightlight: io.rightlight.get(),
+      fan: io.fan()==true ? "On" : "Off",
+      chaetolight: io.chaetolight.get()==true ? "On" : "Off",
+      x200: io.x200.frequency(),
+      diverter: io.diverter.get()==true ? "Right" : "Left"
   });
 });
 
